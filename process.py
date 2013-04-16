@@ -8,8 +8,8 @@ class ColorLapse:
     self.color_img = cv2.imread(filename, cv2.CV_LOAD_IMAGE_COLOR)
     self.img = None
     self.window = 'window'
-    self.greyscale()
-    self.normalize()
+    #self.greyscale()
+    #self.normalize()
     self.threshold()
 
   # spreads the intensities eveny throught the spectrum
@@ -17,24 +17,25 @@ class ColorLapse:
     self.img *= 255.0/self.img.max()
 
   def greyscale(self):
-    self.img = cv2.cvtColor(self.color_img, cv2.COLOR_BGR2GRAY)
+    self.img = np.zeros((self.color_img.shape[0],self.color_img.shape[1]), dtype=self.color_img.dtype)
+    self.img [:,:] = self.color_img[:,:,0]
 
   # turns the  image into pure black and white
   def threshold(self):
-    thresh_val = 20
-    cols, rows = self.img.shape
-    for col in range(cols):
-      for row in range(rows):
-        if self.img[col][row] < thresh_val:
-          self.img[col][row] = 0
+    self.img = np.zeros((self.color_img.shape[0],self.color_img.shape[1]), dtype=self.color_img.dtype)
+    thresh_val = 50
+    rows, cols, temp = self.color_img.shape
+    for row in range(rows):
+      for col in range(cols):
+        #print self.color_img[row][col]
+        if self.color_img[row][col][0] > 110 and self.color_img[row][col][1] < 50 and self.color_img[row][col][2] < 50 :
+          self.img[row][col] = 0
         else:
-          self.img[col][row] = 255
+          self.img[row][col] = 255
 
 if __name__ == "__main__":
   cl = ColorLapse(sys.argv[1])
   cv2.namedWindow(cl.window)
-
   cv2.imshow(cl.window, cl.img)
-
   cv2.waitKey(0)
   cv2.destroyAllWindows()
