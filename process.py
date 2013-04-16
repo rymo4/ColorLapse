@@ -15,3 +15,13 @@ else:
     print "size of image: ", img.shape
     cv2.waitKey(0)
     cv2.destroyAllWindows()
+
+class ColorLapse
+  def __init__(self, filename):
+    self.filename = filename
+  def greyscale(self):
+
+  def normalize(self):
+
+  def threshold(self):
+    return 1
