@@ -28,10 +28,14 @@ class ColorLapse:
     for row in range(rows):
       for col in range(cols):
         #print self.color_img[row][col]
-        if self.color_img[row][col][0] > 110 and self.color_img[row][col][1] < 50 and self.color_img[row][col][2] < 50 :
+        if self.color_img[row][col][2] > 140 and not (self.color_img[row][col][1] > 50 or self.color_img[row][col][0] > 50):
           self.img[row][col] = 0
         else:
           self.img[row][col] = 255
+
+  # goes through the pixel and expands those that are colored 
+  def expand_pixels(self):
+    return -1
 
 if __name__ == "__main__":
   cl = ColorLapse(sys.argv[1])
