@@ -2,6 +2,8 @@ import cv2
 import sys
 import numpy as np
 
+expansion_width = 2;
+
 class ColorLapse:
   def __init__(self, filename):
     self.filename = filename
@@ -20,22 +22,17 @@ class ColorLapse:
         #print self.color_img[row][col]
         if self.color_img[row][col][2] > 140 and not (self.color_img[row][col][1] > 50 or self.color_img[row][col][0] > 50):
           self.img[row][col] = 0
-          self.expand_pixel(row, col)
+          self.expand_pixel(row, col, expansion_width)
         else:
           self.img[row][col] = 255
 
-  def expand_pixel(self, row, col):
+  def expand_pixel(self, row, col, n=1):
     width, height, t = self.color_img.shape
-    if row <= 1 or row >= (width - 1) or col <= 1 or col >= (height -1):
-      return
-    self.img[row-1][col] = 0
-    self.img[row+1][col] = 0
-    self.img[row-1][col-1] = 0
-    self.img[row-1][col+1] = 0
-    self.img[row+1][col-1] = 0
-    self.img[row+1][col+1] = 0
-    self.img[row][col-1] = 0
-    self.img[row][col+1] = 0
+    if not (row <= n or row >= (width - n) or col <= n or col >= (height -n)):
+      for i in range (-n,n+1):
+        for j in range(-n,n+1):
+          self.img[row+i][col+j] = 0
+     
 
 if __name__ == "__main__":
   cl = ColorLapse(sys.argv[1])
