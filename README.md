@@ -2,6 +2,10 @@
 
 Videos => Art in Python
 
+```bash
+$ python process.py [img] [r] [g] [b]
+```
+
 ## Process
 
 ### Start with raw image
