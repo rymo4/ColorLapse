@@ -1,13 +1,14 @@
 import cv2
+import cv2.cv as cv
+import os
 import sys
 import numpy as np
 
 expansion_width = 2;
 
 class ColorLapse:
-  def __init__(self, filename, pen_color):
-    self.filename = filename
-    self.color_img = cv2.imread(filename, cv2.CV_LOAD_IMAGE_COLOR)
+  def __init__(self, image, pen_color):
+    self.color_img = image#cv2.imread(filename, cv2.CV_LOAD_IMAGE_COLOR)
     self.img = None
     self.window = 'window'
     self.threshold_ink()
@@ -44,11 +45,24 @@ class ColorLapse:
         rgb = self.color_img[row][col]
         if rgb[0] == 0 and rgb[1] == 0 and rgb[2] == 0:
           self.color_img[row][col]= np.array([255, 255, 255])
-     
+
 
 if __name__ == "__main__":
-  cl = ColorLapse(sys.argv[1], map(int, sys.argv[2:5]))
-  cv2.namedWindow(cl.window)
-  cv2.imshow(cl.window, cl.color_img)
-  cv2.waitKey(0)
-  cv2.destroyAllWindows()
+  vid = cv.CaptureFromFile('vid2.mov')
+  img = cv.QueryFrame(vid)
+  while img:
+    print 'loopin!'
+    tmp = cv.CreateImage(cv.GetSize(img),8,3)
+    cv.CvtColor(img, tmp, cv.CV_BGR2RGB)
+    img = np.asarray(cv.GetMat(tmp))
+    print 'got the image as a numpy array'
+
+    cl = ColorLapse(img, [50, 200, 50])
+    cv2.namedWindow(cl.window)
+    cv2.imshow(cl.window, cl.color_img)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+    img = cv.QueryFrame(vid)
+
+  #cl = ColorLapse(sys.argv[1], map(int, sys.argv[2:5]))
